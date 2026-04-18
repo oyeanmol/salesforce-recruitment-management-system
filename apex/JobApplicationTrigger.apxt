@@ -1,0 +1,34 @@
+trigger JobApplicationTrigger on Job_Application__c (before insert){
+    
+    Set<Id> candidateIds = new Set<Id>();
+    Set<Id> positionIds = new Set<Id>();
+    
+    for(Job_Application__c app : Trigger.new){
+        if(app.Candidate__c != null && app.Position__c !=null) {
+            candidateIds.add(app.Candidate__c);
+            positionIds.add(app.Position__c);
+        }
+    }
+    
+    Set<String> existingKeys = new Set<String>();
+    
+    for(Job_Application__c app: [
+        SELECT Candidate__c, Position__c
+        FROM Job_Application__c
+        WHERE Candidate__c IN :candidateIds
+        AND Position__c IN :positionIds
+    ]) {
+        existingKeys.add(app.Candidate__c + '-' + app.Position__c);
+    }
+
+    // Check duplicates
+    for (Job_Application__c app : Trigger.new) {
+        if (app.Candidate__c == null || app.Position__c == null) continue;
+
+        String key = app.Candidate__c + '-' + app.Position__c;
+
+        if (existingKeys.contains(key)) {
+            app.addError('Candidate already applied for this position.');
+        }
+    }
+}
