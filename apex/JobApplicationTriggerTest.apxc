@@ -1,0 +1,47 @@
+@isTest
+public class JobAppilcationTriggerTest {
+    
+    @isTest
+    static void testDuplicateApplication() {
+        Candidate__c testC = new Candidate__c(Name = 'Nusratfateh');
+        insert testC;
+        
+        RecordType rt = [
+            SELECT Id FROM RecordType
+            WHERE SObjectType = 'Position__c'
+            LIMIT 1
+        ];
+        
+        //Create a position with RecordType
+        Position__c pos = new Position__c(
+            Name = 'Musician',
+            RecordTypeId = rt.Id
+        );
+        insert pos;
+        
+        //First Application (should pass)
+        Job_Application__c app1 = new Job_Application__c(
+            Candidate__c = testC.Id,
+            Position__c = pos.Id
+        );
+        insert app1;
+        
+        // duplicate application(should fail)
+        Job_Application__c app2 = new Job_Application__c(
+            Candidate__c = testC.Id,
+            Position__c = pos.Id
+        );
+        
+        Test.startTest();
+        
+        Boolean isErrorThrown = false;
+        try{
+            insert app2;
+        } catch (DmlException e) {
+            isErrorThrown = true;
+        }
+        
+        Test.stopTest();
+        System.assert(isErrorThrown, 'Duplicate application should throw error');
+    }
+}
