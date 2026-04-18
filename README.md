@@ -37,6 +37,12 @@ This project is a complete Recruitment Management System built on Salesforce. It
 
 ---
 
+### 🔹 Apex (Light Development)
+* Trigger to prevent duplicate job applications
+* Test class for validation and coverage
+
+---
+
 ### 🔹 Dashboard & Reporting
 
 * Recruitment insights dashboard
@@ -56,7 +62,7 @@ This project is a complete Recruitment Management System built on Salesforce. It
 ## 📈 Project Status
 
 ✅ Admin Phase Completed
-🔄 Development Phase (Upcoming)
+🔄 Advanced Developement (Planned)
 
 ---
 
